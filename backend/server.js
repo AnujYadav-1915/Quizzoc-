@@ -27,8 +27,11 @@ app.use(express.json());
 connectDB();
 connectRedis();
 
+const questionsRoutes = require('./routes/questions');
+
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/questions', questionsRoutes);
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Backend is running' });
 });

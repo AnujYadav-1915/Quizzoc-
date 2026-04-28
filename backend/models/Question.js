@@ -8,6 +8,7 @@ const questionSchema = new mongoose.Schema({
     isCorrect: { type: Boolean, required: true }
   }],
   mediaUrl: { type: String },
+  hint: { type: String },
   difficultyScore: { type: Number, default: 50 },
   stats: {
     timesAppeared: { type: Number, default: 0 },

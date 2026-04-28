@@ -101,16 +101,26 @@ export default function Home() {
             disabled={isSearching}
             className="w-full sm:w-auto px-8 py-4 bg-brand-600 hover:bg-brand-500 text-white rounded-2xl font-semibold text-lg transition-colors flex items-center justify-center gap-2 shadow-[0_0_40px_-10px_rgba(124,58,237,0.5)] disabled:opacity-70"
           >
-            {isSearching ? <Loader2 className="w-5 h-5 animate-spin" /> : <Play className="w-5 h-5 fill-current" />}
-            {isSearching ? "Searching..." : "Play Now"}
+            {isSearching ? <Loader2 className="w-5 h-5 animate-spin" /> : <Users className="w-5 h-5" />}
+            {isSearching ? "Searching..." : "Play Multiplayer"}
           </motion.button>
           
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => router.push("/solo")}
+            className="w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-semibold text-lg transition-colors flex items-center justify-center gap-2 shadow-[0_0_40px_-10px_rgba(16,185,129,0.5)]"
+          >
+            <Play className="w-5 h-5 fill-current" />
+            Play Solo
+          </motion.button>
+
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className="w-full sm:w-auto px-8 py-4 glass-panel hover:bg-white/5 text-white rounded-2xl font-semibold text-lg transition-colors flex items-center justify-center gap-2"
           >
-            <Users className="w-5 h-5" />
+            <Trophy className="w-5 h-5" />
             Create Room
           </motion.button>
         </div>

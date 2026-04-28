@@ -1,51 +1,48 @@
-# 🚀 Quizzard - Interactive Learning Platform
+# 🚀 Quizzoc - Top 1% Multiplayer Trivia Game
 
-Quizzard is a modern, full-stack quiz application designed to make learning engaging and fun. Built with the **MERN** stack (MongoDB, Express, React - with EJS, Node.js), it offers a seamless experience for taking quizzes across various categories like General Knowledge, Science, History, and Sports.
+Quizzoc is a flagship, production-grade real-time multiplayer trivia game. We have completely migrated from a legacy EJS monolith to a cutting-edge **Next.js + Socket.io + Redis** architecture. Compete against others in real-time, climb the ELO ranks, and experience lightning-fast gamified interactions!
 
-![Quizzard Preview](https://img.shields.io/badge/Status-Live-brightgreen)
-![Deployment](https://img.shields.io/badge/Deployment-GitHub_Sync-blue)
-![Vercel](https://img.shields.io/badge/Vercel-Automated-black)
-![Vercel](https://img.shields.io/badge/Deployment-Vercel-black)
-![Node.js](https://img.shields.io/badge/Runtime-Node.js-339933)
+![Quizzoc Live](https://img.shields.io/badge/Status-Live-brightgreen)
+![Next.js](https://img.shields.io/badge/Frontend-Next.js_15-black)
+![Node.js](https://img.shields.io/badge/Backend-Node.js_Socket.io-339933)
+![Redis](https://img.shields.io/badge/Matchmaking-Redis-dc382d)
 
 ---
 
 ## 🔗 Live Demo
-Experience the platform live here:  
-🚀 **[Launch Quizzard](https://quiz-application-murex.vercel.app)**
+Experience the Top 1% architecture live here:  
+🎮 **[Play Quizzoc Now](https://quizzoc.vercel.app)**  
+*(Backend API powered by [Render](https://quizzoc.onrender.com))*
 
 ---
 
-## ✨ Key Features
-- **Diverse Categories**: Choose from Science, History, Sports, and General Knowledge.
-- **Dynamic Quiz Engine**: Real-time feedback and result tracking.
-- **User Authentication**: Secure Login and Registration system powered by MongoDB.
-- **Premium UI/UX**: Clean, responsive design with smooth transitions and modern aesthetics.
-- **Serverless Architecture**: Optimized for high performance and scalability on Vercel.
+## ✨ Top 1% Features
+- **Real-Time Matchmaking**: Uses Redis Sorted Sets (ZSETs) to instantly pair players globally based on their ELO rating.
+- **Live Multiplayer Gameplay**: Powered by WebSocket (`Socket.io`) for zero-latency question delivery, synced timers, and real-time opponent scoring.
+- **Dynamic Speed Scoring**: The faster you answer correctly, the more points you earn.
+- **Flagship UI/UX**: Built with Framer Motion and Tailwind CSS v4. Features a dark space theme, glassmorphism, 60fps micro-animations, and dynamic visual feedback.
+- **Secure Authentication**: JWT-based secure user sessions and fully hashed credentials stored in MongoDB Atlas.
 
 ---
 
 ## 🛠️ Technology Stack
-- **Frontend**: EJS (Embedded JavaScript), CSS3, JavaScript (ES6+)
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB Atlas
-- **Deployment**: Vercel (Production ready)
-- **Utilities**: Serverless-http, Mongoose, Body-parser
+### Frontend (Monorepo)
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS v4
+- **Animations**: Framer Motion
+- **State Management**: Zustand
+- **Real-Time Client**: `socket.io-client`
+- **Deployment**: Vercel Edge Network
 
----
-
-## 🚀 Deployment Details
-The application is deployed using **Vercel's Serverless Functions**. The project configuration includes:
-- `vercel.json`: Handles routing and dynamic Node.js runtime.
-- `app.js`: Optimized for cold-start performance and serverless execution.
+### Backend (Monorepo)
+- **Runtime**: Node.js & Express.js
+- **Real-Time Engine**: `socket.io`
+- **Database**: MongoDB Atlas (Mongoose)
+- **State & Matchmaking**: Redis (ioredis)
+- **Deployment**: Render (Dedicated Web Service)
 
 ---
 
 ## 👨‍💻 Developed By
-**Ashish & Anuj**  
-An enterprise-grade SaaS transformation.
-
----
-
-## 📄 License
-This project is licensed under the ISC License.
+**Anuj Yadav & Ashish Singh**  
+*An enterprise-grade real-time gaming transformation.*

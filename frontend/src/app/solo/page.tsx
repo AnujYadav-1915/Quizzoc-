@@ -5,61 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Zap, Timer, Star, AlertCircle, Lightbulb, Image as ImageIcon, CheckCircle2, XCircle, Trophy } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const SOLO_QUESTIONS = [
-  {
-    id: 1,
-    category: "Science",
-    question: "What is the primary gas found in the Earth's atmosphere?",
-    options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
-    correctAnswer: 2,
-    hint: "It makes up about 78% of the air we breathe.",
-    imageUrl: null,
-  },
-  {
-    id: 2,
-    category: "Geography",
-    question: "Which of these planets is known as the Red Planet?",
-    options: ["Venus", "Jupiter", "Saturn", "Mars"],
-    correctAnswer: 3,
-    hint: "Elon Musk really wants to go there.",
-    imageUrl: "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=1000&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    category: "Pop Culture",
-    question: "Who directed the movie 'Inception'?",
-    options: ["Steven Spielberg", "Christopher Nolan", "Quentin Tarantino", "Martin Scorsese"],
-    correctAnswer: 1,
-    hint: "He also directed Interstellar and The Dark Knight.",
-    imageUrl: null,
-  },
-  {
-    id: 4,
-    category: "History",
-    question: "In what year did the Titanic sink?",
-    options: ["1905", "1912", "1918", "1923"],
-    correctAnswer: 1,
-    hint: "It was before World War I began.",
-    imageUrl: "https://images.unsplash.com/photo-1542385262-cdf06b2f4f21?q=80&w=1000&auto=format&fit=crop",
-  },
-  {
-    id: 5,
-    category: "Technology",
-    question: "What does HTTP stand for?",
-    options: [
-      "HyperText Transfer Protocol",
-      "Hyperlink Transfer Technology",
-      "HyperText Transmission Process",
-      "Hyperlink Text Transfer"
-    ],
-    correctAnswer: 0,
-    hint: "It is the foundation of data communication for the World Wide Web.",
-    imageUrl: null,
-  }
-];
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL || "https://quizzoc.onrender.com";
 
 export default function SoloMode() {
   const router = useRouter();
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  
   const [currentQ, setCurrentQ] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(15);
@@ -72,10 +24,38 @@ export default function SoloMode() {
   const [fiftyFiftyUsed, setFiftyFiftyUsed] = useState(false);
   const [eliminatedOptions, setEliminatedOptions] = useState<number[]>([]);
 
-  const question = SOLO_QUESTIONS[currentQ];
+  useEffect(() => {
+    // Fetch questions dynamically from MongoDB via Render backend
+    const fetchQuestions = async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryId = urlParams.get('category');
+        const url = categoryId 
+            ? `${NEXT_PUBLIC_API_URL}/api/questions?categoryId=${categoryId}` 
+            : `${NEXT_PUBLIC_API_URL}/api/questions`;
+            
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        if (data.length > 0) {
+            setQuestions(data);
+        } else {
+            console.error("No questions found.");
+        }
+      } catch (err) {
+        console.error("Failed to fetch questions:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchQuestions();
+  }, []);
+
+  const question = questions[currentQ];
 
   useEffect(() => {
-    if (gameOver || isAnswering) return;
+    if (loading || gameOver || isAnswering || !question) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -103,7 +83,7 @@ export default function SoloMode() {
     setIsAnswering(true);
     setSelectedOption(index);
 
-    if (index === question.correctAnswer) {
+    if (question.options[index].isCorrect) {
       setScore((prev) => prev + (timeLeft * 10) + 100); // Speed bonus
     }
 
@@ -113,7 +93,7 @@ export default function SoloMode() {
   };
 
   const nextQuestion = () => {
-    if (currentQ < SOLO_QUESTIONS.length - 1) {
+    if (currentQ < questions.length - 1) {
       setCurrentQ(prev => prev + 1);
       setTimeLeft(15);
       setSelectedOption(null);
@@ -135,7 +115,7 @@ export default function SoloMode() {
   const useFiftyFifty = () => {
     if (!fiftyFiftyUsed) {
       setFiftyFiftyUsed(true);
-      const wrongOptions = [0, 1, 2, 3].filter(idx => idx !== question.correctAnswer);
+      const wrongOptions = [0, 1, 2, 3].filter(idx => !question.options[idx].isCorrect);
       // Eliminate 2 random wrong options
       const shuffled = wrongOptions.sort(() => 0.5 - Math.random());
       setEliminatedOptions([shuffled[0], shuffled[1]]);
@@ -194,7 +174,7 @@ export default function SoloMode() {
         </div>
 
         <div className="text-sm font-bold text-slate-400 bg-white/5 px-4 py-2 rounded-full border border-white/10">
-          Question {currentQ + 1} / {SOLO_QUESTIONS.length}
+          Question {currentQ + 1} / {questions.length}
         </div>
 
         <div className={cn(
@@ -220,21 +200,21 @@ export default function SoloMode() {
             </span>
             
             <h2 className="text-2xl md:text-4xl font-bold leading-tight mb-8">
-              {question.question}
+              {question.questionText}
             </h2>
 
-            {question.imageUrl && (
+            {question.mediaUrl && (
               <div className="w-full h-64 rounded-2xl overflow-hidden mb-8 relative border border-white/10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={question.imageUrl} alt="Question Context" className="w-full h-full object-cover" />
+                <img src={question.mediaUrl} alt="Question Context" className="w-full h-full object-cover" />
               </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
-              {question.options.map((opt, idx) => {
+              {question.options.map((opt: any, idx: number) => {
                 const isEliminated = eliminatedOptions.includes(idx);
                 const isSelected = selectedOption === idx;
-                const isCorrect = idx === question.correctAnswer;
+                const isCorrect = opt.isCorrect;
                 
                 let btnStyle = "bg-white/5 border-white/10 hover:bg-white/10";
                 
@@ -262,7 +242,7 @@ export default function SoloMode() {
                   >
                     {isAnswering && isCorrect && <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-400" />}
                     {isAnswering && isSelected && !isCorrect && <XCircle className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-400" />}
-                    {opt}
+                    {opt.text}
                   </motion.button>
                 );
               })}

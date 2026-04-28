@@ -133,7 +133,7 @@ export default function Home() {
             <Target className="w-6 h-6 text-brand-400" />
             Trending Categories
           </h2>
-          <button onClick={() => router.push("/solo")} className="text-sm text-brand-400 hover:text-brand-300 font-medium transition-colors">
+          <button onClick={() => router.push("/categories")} className="text-sm text-brand-400 hover:text-brand-300 font-medium transition-colors">
             View All
           </button>
         </div>

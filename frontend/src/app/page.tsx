@@ -133,7 +133,7 @@ export default function Home() {
             <Target className="w-6 h-6 text-brand-400" />
             Trending Categories
           </h2>
-          <button className="text-sm text-brand-400 hover:text-brand-300 font-medium">
+          <button onClick={() => router.push("/solo")} className="text-sm text-brand-400 hover:text-brand-300 font-medium transition-colors">
             View All
           </button>
         </div>
@@ -151,6 +151,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 onHoverStart={() => setHoveredId(category.id)}
                 onHoverEnd={() => setHoveredId(null)}
+                onClick={() => router.push(`/solo?category=${category.id}`)}
                 className="relative group cursor-pointer"
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-3xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
